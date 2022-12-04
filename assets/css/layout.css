@@ -2,4 +2,5 @@ body, h1 {
   margin: 0;
   /* text-align: center; */ }
   body #layout-main, h1 #layout-main {
+    overflow-y: scroll;
     height: 86%; }
