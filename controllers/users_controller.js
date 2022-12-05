@@ -1,5 +1,5 @@
 const User = require('../models/user');
-
+//no need of async-await as there is no nesting level
 module.exports.profile = function(req,res){
     User.findById(req.params.id,function(err,user){
         return res.render('user_profile',{
@@ -65,6 +65,7 @@ module.exports.create = function(req,res){
 
 //sign in and create a session for user
 module.exports.createSession = function(req,res){
+    req.flash('success','Logged in Successfully');
     return res.redirect('/');
 }
 
@@ -74,6 +75,7 @@ module.exports.destroySession = function(req,res){
             console.log(err);
             return;
         }
+        req.flash('success','You have logged out!');
         return res.redirect('/');
     });
 }
