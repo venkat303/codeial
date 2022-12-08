@@ -1,11 +1,12 @@
 <link rel="stylesheet" href="/css/home.css">
+<script src="https://kit.fontawesome.com/fe72e1556a.js" crossorigin="anonymous"></script>
 
 <div id="home-container">
     <section id="feed-posts">
         <% if(locals.user){%>
             <h4>Posts</h4>
-            <form action="/posts/create" id="new--post-form" method="post">
-                <textarea name="content" cols="30" rows="3" placeholder="Type Here" required></textarea> 
+            <form action="/posts/create" id="new-post-form" method="post">
+                <textarea id="post-input" name="content" cols="30" rows="3" placeholder="Type Here" required></textarea> 
                 <input type="submit" value="Post">
             </form>
             <div id="posts-list-container">
@@ -27,4 +28,5 @@
         <% } %>
     </section>
 </div>
-
+<script src="/js/home_posts_comments.js"></script>
+<script src="/js/home_posts.js"></script>
