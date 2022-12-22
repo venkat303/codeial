@@ -1,0 +1,7 @@
+<h1>Fill the below form to reset the password</h1>
+<br>
+<form action="/users/confirm_password/<%= user_token.accessToken %>" method="post">
+    <input type="password" name="new_password" placeholder="Password" required><br><br>
+    <input type="password" name="new_confirm_password" placeholder="Confirm Password" required><br><br>
+    <input type="submit" value="Reset Password">
+</form>

@@ -9,8 +9,13 @@ router.post('/update/:id',passport.checkAuthentication,userController.update);
 
 router.get('/sign-up',userController.signUp);
 router.get('/sign-in',userController.signIn);
+router.get('/reset',userController.reset);
+router.post('/reset_password',userController.resetPassword);
 
 router.post('/create',userController.create);
+
+router.get('/password/:accessToken',userController.password);
+router.post('/confirm_password/:accessToken',userController.changePassword);
 
 //use passport as middle ware to authenticate
 router.post('/create-session', passport.authenticate(

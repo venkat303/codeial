@@ -1,6 +1,10 @@
 const User = require('../models/user');
+const UserToken = require('../models/reset_password');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+const queue = require('../config/kue');
+const resetPasswordEmailWorker = require('../workers/resetPassword_email_worker');
 //no need of async-await as there is no nesting level
 module.exports.profile = function(req,res){
     User.findById(req.params.id,function(err,user){
@@ -73,6 +77,96 @@ module.exports.signIn = function(req,res){
     return res.render('user_sign_in',{
         title : "Codial | Sign In"
     })
+}
+//render the reset page
+module.exports.reset = function(req,res){
+    return res.render('reset_password',{
+        title : "Reset Password"
+    })
+}
+//sending the email to reset password if email exist
+module.exports.resetPassword = function(req,res){
+    console.log(req.body.reset_email);
+    User.findOne({email : req.body.reset_email},function(err,user){
+        if(err){
+            console.log('error in finding username');
+            return;
+        }else if(user){
+            UserToken.create({
+                user: user,
+                accessToken : crypto.randomBytes(20).toString('hex'),
+                isValid : true
+            },
+            function(err,usertoken){
+                if(err){
+                    console.log('error in creating user while resetting passowrd');
+                    return;
+                }
+
+                let job = queue.create('reset_emails',usertoken).save(function(err){
+                    if(err){
+                        console.log('error in creating a queue',err);
+                    }
+                    console.log('job enqueued',job.id)
+                });
+                return res.render('reset_note',{
+                    title: "Sent email to reset password"
+                });
+            })
+        }
+    })
+}
+
+//verifying the access token and rendering the change password page if token s valid
+module.exports.password = function(req,res){
+    UserToken.findOne({accessToken : req.params.accessToken},function(err,usertoken){
+        if(err){
+            console.log('error in finding usertoken',err);
+            return;
+        }else if(usertoken){
+            if(!usertoken.isValid){
+                return res.render('token_invalid',{
+                    title: "Session Expired"
+                }) 
+            }else{
+                return res.render('reset',{
+                    title: "Change Password",
+                    user_token: usertoken
+                })
+            }
+        }
+    });
+}
+
+//verifying whether the password and comfirm password are same and updating the passowrd in user schema
+module.exports.changePassword = function(req,res){
+    if(req.body.new_password != req.body.new_confirm_password){
+        return res.redirect('back');
+    }
+    UserToken.findOne({accessToken : req.params.accessToken},function(err,usertoken){
+        if(err){
+            console.log('error in finding usertoken',err);
+            return;
+        }
+        if(usertoken.isValid){
+            let reset_user = usertoken.user._id;
+            console.log(usertoken.isValid);
+            console.log(reset_user);
+            User.findByIdAndUpdate(reset_user,{password: req.body.new_password},function(err,user){
+                if(err){console.log('Error in updating password',err);return;}
+                console.log('password updated');
+                return;
+            })
+            UserToken.findByIdAndUpdate(usertoken._id,{isValid: false},function(err,usertoken){
+                if(err){console.log('Error in updating password',err);return;}
+                console.log('usertoken updated');
+                return;
+            })
+        }
+        return res.render('password_updated',{
+            title: "password changed"
+        })
+    });
 }
 
 //get the signup data
