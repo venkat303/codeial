@@ -25,6 +25,7 @@
         <% if(locals.user){%>
             <form id="post-<%= post._id %>-comments-form" action="/comments/create" method="post">
                 <input id="comment-input" type="text" name="content" placeholder="Type the comment here..." required>
+                <!-- <textarea id="comment-input" name="content" cols="20" rows="1" placeholder="Type the comment here" required></textarea> -->
                 <input type="hidden" name="post" value="<%=post._id%>">
                 <input type="submit" value="Add Comment">
             </form>

@@ -32,9 +32,9 @@ module.exports.create = async function(req,res){
                         comment: comment
                     },
                     message: "Comment Created!"
-                })
+                })  
             }
-            return res.redirect('/');
+            return res.redirect('back');
         }
     }catch(err){
         console.log('Error',err);
