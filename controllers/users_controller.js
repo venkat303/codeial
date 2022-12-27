@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const UserToken = require('../models/reset_password');
+const Friendship = require('../models/friendship');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -209,4 +210,43 @@ module.exports.destroySession = function(req,res){
         req.flash('success','You have logged out!');
         return res.redirect('/');
     });
+}
+
+module.exports.addFriend = async function(req,res){
+    try{
+        let fromUser = await User.findById(req.user._id);
+        let toUser = await User.findById(req.query.friend_id);
+        if(!fromUser.friendships.includes(req.query.friend_id)){
+            fromUser.friendships.push(req.query.friend_id);
+            fromUser.save();
+            toUser.friendships.push(req.user._id);
+            toUser.save();
+            await Friendship.create({
+                from_user: fromUser,
+                to_user: toUser
+            });
+            req.flash('success','Added as Friend');
+        }else{
+            req.flash('error','Friend Already Exists');
+        }
+        return res.redirect('back');
+    }catch(err){
+        console.log("Error in creating friends", err);
+        return res.redirect('back');
+    }
+}
+module.exports.removeFriend = async function(req,res){
+    try{
+        let fromUser = await User.findById(req.user._id);
+        let toUser = await User.findById(req.query.friend_id);
+        let removeFriendship = await Friendship.deleteOne({from_user:fromUser,to_user:toUser});
+        await User.findByIdAndUpdate(fromUser,{$pull: {friendships: req.query.friend_id}});
+        await User.findByIdAndUpdate(toUser,{$pull: {friendships: req.user._id}});
+
+        req.flash('success','Friend deleted');
+        return res.redirect('back');
+    }catch(err){
+        console.log("Error in removing friends", err);
+        return res.redirect('back');
+    }
 }

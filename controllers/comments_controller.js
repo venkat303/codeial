@@ -18,6 +18,7 @@ module.exports.create = async function(req,res){
             post.save();
 
             comment = await comment.populate([{path: 'user', select: 'name email'}]);
+            // console.log('comment:',comment);
             // commentsMailer.newComment(comment);
             let job = queue.create('emails',comment).save(function(err){
                 if(err){
@@ -49,11 +50,11 @@ module.exports.destroy = async function(req,res){
         if(comment.user == req.user.id){
             let postId = comment.post;
             comment.remove();
-            let post = Post.findByIdAndUpdate(postId,{$pull:{comments:req.params.id}});
+            let post = await Post.findByIdAndUpdate(postId,{$pull:{comments:req.params.id}});
 
             // CHANGE :: destroy the associated likes for this comment
             await Like.deleteMany({likeable: comment._id, onModel: 'Comment'});
-            
+                
             // send the comment id which was deleted back to the views
             if (req.xhr){
                 return res.status(200).json({

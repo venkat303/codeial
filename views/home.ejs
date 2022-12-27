@@ -1,5 +1,4 @@
 <link rel="stylesheet" href="/css/home.css">
-<!-- <script src="https://kit.fontawesome.com/fe72e1556a.js" crossorigin="anonymous"></script> -->
 
 <div id="home-container">
     <section id="feed-posts">
@@ -20,17 +19,27 @@
     </section>
     
     <section id="user-friends">
-        <h4>FRIENDS</h4>
+        <section style="border-bottom: 1px solid black ;">
+            <h4>FRIENDS</h4>
+            <% for (friend of friends) { %>
+                <p>
+                    <a href="/users/profile/<%= friend.id %>"><%=friend.name%></a>
+                </p>
+            <% } %>
+        </section>
+        
+
+        <h4>ALL USERS</h4>
         <% for (user of all_users) { %>
             <p>
                 <a href="/users/profile/<%= user.id %>"><%=user.name%></a>
             </p>
         <% } %>
     </section>
+
 </div>
 <script src="/js/home_posts_comments.js"></script>
 <script src="/js/home_posts.js"></script>
-
 <!-- CHANGE :: import the script file for toggle likes, also run it over for the already present posts and comments on the page -->
 <script src="js/toggle_likes.js"></script>
 <script>

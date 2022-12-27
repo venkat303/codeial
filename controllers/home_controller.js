@@ -21,11 +21,13 @@ module.exports.home = async function(req,res){
         })
         .populate('likes');
         let users = await User.find({});
+        let signInUserFriends = await User.find({friendships:req.user._id});
 
         return res.render('home',{
             title: "Codeial | Home",
             posts: posts,
-            all_users: users
+            all_users: users,
+            friends: signInUserFriends
         });
 
     }catch(err){

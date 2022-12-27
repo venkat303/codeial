@@ -11,7 +11,21 @@
             <input type="submit" value="UPDATE">
         </form>
     <% } else {%>
-        <!-- else show only the profile info -->
+        <!-- else show only the profile info -->    
         <p><%= profile_user.name %></p>
         <p><%= profile_user.email %></p>
+        <% if(!locals.user.friendships.find(x => x.toString() === profile_user.id)) { %>
+            <a href="/users/addfriend/?friend_id=<%=profile_user._id%>">
+                <button type="button">
+                    FOLLOW
+                </button>
+            </a>
+        <% } %>
+        <% if(locals.user.friendships.find(x => x.toString() === profile_user.id)) {%>
+            <a href="/users/removefriend/?friend_id=<%=profile_user._id%>">
+                <button type="button">
+                    UNFOLLOW
+                </button>
+            </a>
+        <% } %>
     <% } %>
