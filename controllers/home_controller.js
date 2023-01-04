@@ -21,7 +21,11 @@ module.exports.home = async function(req,res){
         })
         .populate('likes');
         let users = await User.find({});
-        let signInUserFriends = await User.find({friendships:req.user._id}).populate('friendships','name');
+        let signInUserFriends;
+        if(req.user){
+            signInUserFriends = await User.find({friendships:req.user._id}).populate('friendships','name');
+        }
+        
 
         return res.render('home',{
             title: "Codeial | Home",

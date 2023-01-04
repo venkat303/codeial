@@ -9,9 +9,10 @@
     background: white;
     padding: 5px;
     box-shadow: 1px 1px 1px 1px lightgrey;
+    z-index: 1;
 }
 
-#chat-message-list{
+#chat-messages-list{
     list-style: none;
     padding: 10px;
     height: 70%;
@@ -38,7 +39,7 @@
     }
 }
 
-#chat-message-input-conntainer{
+#chat-message-input-container{
     height:24% ;
     width: 100%;
     display: flex;
@@ -51,6 +52,10 @@
     #send-message{
         height: 50%;
         width: 30%;
+        font-size: 25px;
+        color: white;
+        border: none;
+        background-color: #58d258;
     }
 
 }
