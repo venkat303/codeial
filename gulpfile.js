@@ -1,21 +1,21 @@
 // install gulp-cli,gulp,gulp-sass,gulp-cssnano,gulp-rev
 
-// const gulp = require('gulp');
-import gulp from 'gulp';
-// const sass = require('gulp-sass')(require('node-sass'));
-import nodeSass from 'node-sass';
-import gulpSass from 'gulp-sass';
-const sass = gulpSass(nodeSass);
-// const cssnano = require('gulp-cssnano');
-import cssnano from 'gulp-cssnano';
-// const rev = require('gulp-rev');
-import rev from 'gulp-rev';
-// const uglify = require('gulp-uglify-es').default;
-import uglify from 'gulp-uglify-es';
-// const imagemin = require('gulp-imagemin');
-import imagemin from 'gulp-imagemin';
-// const del = require('del');
-import gulpdel from 'del';
+const gulp = require('gulp');
+// import gulp from 'gulp';
+const sass = require('gulp-sass')(require('node-sass'));
+// import nodeSass from 'node-sass';
+// import gulpSass from 'gulp-sass';
+// const sass = gulpSass(nodeSass);
+const cssnano = require('gulp-cssnano');
+// import cssnano from 'gulp-cssnano';
+const rev = require('gulp-rev');
+// import rev from 'gulp-rev';
+const uglify = require('gulp-uglify-es').default;
+// import uglify from 'gulp-uglify-es';
+const imagemin = require('gulp-imagemin');
+// import imagemin from 'gulp-imagemin';
+const del = require('del');
+// import del from 'del';
 
 
 gulp.task('css',function(done){
@@ -68,7 +68,7 @@ gulp.task('images', function(done){
 // empty the public/assets directory
 gulp.task('clean:assets', function(done){
     // dele.sync('./public/assets');
-    gulpdel.sync(['./public/assets'], { force:true });
+    del.sync(['./public/assets'], { force:true });
     done();
 });
 

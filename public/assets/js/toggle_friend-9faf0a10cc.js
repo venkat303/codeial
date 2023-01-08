@@ -1,0 +1,1 @@
+(function(){let e=$("#toggle-friendship"),n=$("#friend-button");e.click((function(o){console.log("inside toggle friedship"),o.preventDefault(),$.ajax({type:"POST",URL:"/users/addfriend"}).done((function(){e.attr("href","/users/removefriend"),n.html("Unfollow")})).fail((function(e){console.log("error in completing the request")}))}))})();
